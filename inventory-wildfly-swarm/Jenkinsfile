@@ -6,7 +6,7 @@ pipeline {
     stage('Build JAR') {
       steps {
         sh "mvn package -f inventory-wildfly-swarm"
-        stash name:"jar", includes:"target/inventory-1.0-SNAPSHOT-swarm.jar"
+        stash name:"jar", includes:"inventory-wildfly-swarm/target/inventory-1.0-SNAPSHOT-swarm.jar"
       }
     }
     stage('Build Image') {
@@ -14,7 +14,7 @@ pipeline {
         unstash name:"jar"
         script {
           openshift.withCluster() {
-            openshift.startBuild("inventory-s2i", "--from-file=target/inventory-1.0-SNAPSHOT-swarm.jar", "--wait")
+            openshift.startBuild("inventory-s2i", "--from-file=inventory-wildfly-swarm/target/inventory-1.0-SNAPSHOT-swarm.jar", "--wait")
           }
         }
       }
